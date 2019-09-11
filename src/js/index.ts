@@ -1,6 +1,7 @@
-import '../css/style.css';
-import StackIcon from './StackIcon';
+import '../css/style.css'
+import StackIcon from './StackIcon'
 
-const test = new StackIcon();
-
-test.testen();
+document.querySelectorAll('[data-stack]').forEach(element => {
+  const stackIcon = new StackIcon(element)
+  stackIcon.initialize()
+})

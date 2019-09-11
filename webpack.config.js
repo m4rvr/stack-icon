@@ -22,11 +22,7 @@ const config = {
       },
       {
         test: /\.css$/,
-        use: [
-          MiniCssExtractPlugin.loader,
-          'css-loader',
-          'postcss-loader',
-        ],
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader'],
       },
     ],
   },
@@ -46,9 +42,7 @@ const config = {
 if (isProduction) {
   config.optimization = {
     minimize: true,
-    minimizer: [
-      new TerserWebpackPlugin(),
-    ],
+    minimizer: [new TerserWebpackPlugin()],
   };
 } else {
   config.devServer = {

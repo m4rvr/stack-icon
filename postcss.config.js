@@ -5,8 +5,10 @@ module.exports = {
   plugins: [
     require('tailwindcss'),
     require('autoprefixer'),
-    isProduction ? purgeCss({
-      content: ['./**/*.html'],
-    }) : '',
+    isProduction
+      ? purgeCss({
+          content: ['./**/*.html'],
+        })
+      : '',
   ],
 };
