@@ -1,16 +1,18 @@
-const path = require('path');
-const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const TerserWebpackPlugin = require('terser-webpack-plugin');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+import path from 'path';
+import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import TerserWebpackPlugin from 'terser-webpack-plugin';
+import { CleanWebpackPlugin } from 'clean-webpack-plugin';
+import webpack from 'webpack';
 
 const isProduction = process.env.NODE_ENV === 'production';
 
-const config = {
+const config: webpack.Configuration = {
   mode: isProduction ? 'production' : 'development',
   resolve: {
-    extensions: ['.ts', '.json', '.css'],
+    extensions: ['.ts', '.js', '.json', '.css'],
+    modules: ['src', 'node_modules'],
   },
   entry: path.resolve(__dirname, 'src'),
   module: {
@@ -52,4 +54,4 @@ if (isProduction) {
   };
 }
 
-module.exports = config;
+export default config;
