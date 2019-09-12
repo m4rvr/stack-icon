@@ -8,9 +8,14 @@ import webpack from 'webpack';
 
 const isProduction = process.env.NODE_ENV === 'production';
 
+console.log(path.resolve(__dirname, 'src'));
+
 const config: webpack.Configuration = {
   mode: isProduction ? 'production' : 'development',
   resolve: {
+    alias: {
+      '~': path.resolve(__dirname, 'src'),
+    },
     extensions: ['.ts', '.js', '.json', '.css'],
     modules: ['src', 'node_modules'],
   },

@@ -18,8 +18,13 @@
         "noImplicitReturns": true,
         "noUnusedLocals": true,
         "noImplicitAny": true,
-        "newLine": "LF"
-
+        "newLine": "LF",
+        "baseUrl": ".",
+        "paths": {
+          "~/*": [
+            "./src/*"
+          ]
+        }
     },
     "include": [
       "src/**/*"
