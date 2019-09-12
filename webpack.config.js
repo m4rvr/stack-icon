@@ -10,9 +10,9 @@ const isProduction = process.env.NODE_ENV === 'production';
 const config = {
   mode: isProduction ? 'production' : 'development',
   resolve: {
-    extensions: ['.ts', '.tsx', '.js', '.json', '.css'],
+    extensions: ['.ts', '.json', '.css'],
   },
-  entry: path.resolve(__dirname, 'src/js/index.ts'),
+  entry: path.resolve(__dirname, 'src'),
   module: {
     rules: [
       {
