@@ -1,5 +1,5 @@
 import '../css/style.css';
-import StackIcon from './StackIcon';
+import StackIcon from './assets/components/StackIcon';
 
 const allStacks: NodeListOf<HTMLElement> = document.querySelectorAll(
   '[data-stack]',
