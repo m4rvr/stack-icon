@@ -6,6 +6,11 @@ enum ElementPosition {
   Bottom,
 }
 
+enum Direction {
+  Up,
+  Down,
+}
+
 interface Options {
   start: number;
   min: number;
@@ -23,6 +28,7 @@ class StackIcon {
   protected decrementButton!: HTMLElement | null;
   protected incrementButton!: HTMLElement | null;
   protected numberOfItems = 1;
+  protected previousNumberOfItems = this.numberOfItems;
   protected defaultOptions: Options = {
     start: 1,
     min: 1,
@@ -58,20 +64,14 @@ class StackIcon {
       this.numberOfItems - 1 > 0 &&
       this.numberOfItems - 1 >= this.options.min
     ) {
-      this.numberOfItems = this.numberOfItems - 1;
-      this.updateStackItemsNumber();
-
-      if (this.numberOfItems < 3) {
-        this.handleStackAnimation();
-      }
+      this.setNumberOfItems(this.numberOfItems - 1);
     }
   }
 
   public increment(): void {
     if (this.numberOfItems + 1 <= this.options.max || this.options.max === 0) {
-      this.numberOfItems = this.numberOfItems + 1;
-      this.handleStackAnimation();
-      this.updateStackItemsNumber();
+      this.setNumberOfItems(this.numberOfItems + 1);
+      this.animateStack();
     }
   }
 
@@ -114,11 +114,23 @@ class StackIcon {
   }
 
   protected initializeStack(): void {
-    this.numberOfItems = this.options.start;
+    this.setNumberOfItems(this.options.start);
     this.setTopElementPosition(ElementPosition.Bottom);
     this.bindEventListener();
     this.updateStackItemsNumber();
     this.show();
+  }
+
+  protected setNumberOfItems(number: number): void {
+    const direction =
+      number > this.numberOfItems ? Direction.Up : Direction.Down;
+    console.log(direction);
+    this.numberOfItems = number;
+    this.updateStackItemsNumber();
+
+    if (this.numberOfItems < 3) {
+      this.animateStack();
+    }
   }
 
   protected setTopElementPosition(position: ElementPosition): void {
@@ -174,7 +186,7 @@ class StackIcon {
     }
   }
 
-  protected handleStackAnimation(): void {
+  protected animateStack(): void {
     switch (this.numberOfItems) {
       case 1:
         console.log('show 1!');
