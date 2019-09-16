@@ -4,11 +4,10 @@ import HtmlWebpackPlugin from 'html-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import TerserWebpackPlugin from 'terser-webpack-plugin';
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
+import OptimizeCSSAssetsPlugin from 'optimize-css-assets-webpack-plugin';
 import webpack from 'webpack';
 
 const isProduction = process.env.NODE_ENV === 'production';
-
-console.log(path.resolve(__dirname, 'src'));
 
 const config: webpack.Configuration = {
   mode: isProduction ? 'production' : 'development',
@@ -34,8 +33,8 @@ const config: webpack.Configuration = {
     ],
   },
   plugins: [
-    new ForkTsCheckerWebpackPlugin(),
     new CleanWebpackPlugin(),
+    new ForkTsCheckerWebpackPlugin(),
     new MiniCssExtractPlugin({
       filename: '[name].css',
       chunkFilename: '[id].css',
@@ -49,7 +48,12 @@ const config: webpack.Configuration = {
 if (isProduction) {
   config.optimization = {
     minimize: true,
-    minimizer: [new TerserWebpackPlugin()],
+    minimizer: [
+      new TerserWebpackPlugin({
+        extractComments: false,
+      }),
+      new OptimizeCSSAssetsPlugin()
+    ],
   };
 } else {
   config.devServer = {
