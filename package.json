@@ -1,10 +1,14 @@
 {
-  "name": "webpack-typescript-base",
+  "name": "stack-icon",
   "version": "1.0.0",
   "license": "MIT",
   "author": {
     "name": "Marvin Rudolph",
     "email": "info@marvin-rudolph.de"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MarvinRudolph/stack-icon.git"
   },
   "main": "dist/bundle.js",
   "types": "dist/types/index.d.ts",
