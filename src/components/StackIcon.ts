@@ -9,6 +9,7 @@ enum ElementPosition {
 enum Direction {
   Up,
   Down,
+  Equal,
 }
 
 interface Options {
@@ -71,6 +72,14 @@ class StackIcon {
   public increment(): void {
     if (this.numberOfItems + 1 <= this.options.max || this.options.max === 0) {
       this.setNumberOfItems(this.numberOfItems + 1);
+    }
+  }
+
+  public setNumberOfItems(number: number): void {
+    this.previousNumberOfItems = this.numberOfItems;
+    if (number !== this.previousNumberOfItems) {
+      this.numberOfItems = number;
+      this.updateStackItemsNumber();
       this.animateStack();
     }
   }
@@ -119,18 +128,6 @@ class StackIcon {
     this.bindEventListener();
     this.updateStackItemsNumber();
     this.show();
-  }
-
-  protected setNumberOfItems(number: number): void {
-    const direction =
-      number > this.numberOfItems ? Direction.Up : Direction.Down;
-    console.log(direction);
-    this.numberOfItems = number;
-    this.updateStackItemsNumber();
-
-    if (this.numberOfItems < 3) {
-      this.animateStack();
-    }
   }
 
   protected setTopElementPosition(position: ElementPosition): void {
@@ -186,60 +183,113 @@ class StackIcon {
     }
   }
 
+  protected getDirection(): Direction {
+    let direction: Direction = Direction.Equal;
+
+    if (this.numberOfItems > this.previousNumberOfItems) {
+      direction = Direction.Up;
+    } else if (this.numberOfItems < this.previousNumberOfItems) {
+      direction = Direction.Down;
+    }
+
+    return direction;
+  }
+
+  protected getCurrentLevel(): number {
+    return this.previousNumberOfItems > 3 ? 3 : this.previousNumberOfItems;
+  }
+
   protected animateStack(): void {
-    switch (this.numberOfItems) {
-      case 1:
-        console.log('show 1!');
-        break;
+    const direction: Direction = this.getDirection();
 
-      case 2:
-        this.testAnimation();
-        break;
-
-      case 3:
-        console.log('show 3!');
-        break;
+    if (this.numberOfItems === 1) {
+      this.animateToLevelInDirection(1, direction);
+    } else if (this.numberOfItems === 2) {
+      this.animateToLevelInDirection(2, direction);
+    } else if (
+      direction === Direction.Up &&
+      this.numberOfItems >= 3 &&
+      this.previousNumberOfItems < 3
+    ) {
+      this.animateToLevelInDirection(3, direction);
     }
   }
 
-  protected testAnimation(): void {
+  protected animateToLevelInDirection(
+    level: number,
+    direction: Direction,
+  ): void {
     if (
       this.svgElement &&
       this.topElement &&
       this.topAnimationElement &&
       this.stackItems
     ) {
+      const currentLevel: number = this.getCurrentLevel();
+
       const timeline = new TimelineLite({
         ease: Elastic.easeInOut,
       });
 
-      this.svgElement.prepend(this.topAnimationElement);
+      if (direction === Direction.Up) {
+        this.svgElement.prepend(this.topAnimationElement);
 
-      timeline.set(this.topAnimationElement, {
-        autoAlpha: 0,
+        timeline.set(this.topAnimationElement, {
+          autoAlpha: 0,
+        });
+
+        timeline.to(this.topAnimationElement, 0.3, {
+          autoAlpha: 1,
+          y: this.elementSpacing * 2 - (currentLevel - 1) * this.elementSpacing,
+        });
+
+        timeline.set(this.topAnimationElement, {
+          autoAlpha: 0,
+          onComplete: () => {
+            TweenLite.set(this.topAnimationElement, {
+              y: 0,
+            });
+          },
+        });
+
+        const itemsTimeline = new TimelineLite({
+          ease: Elastic.easeInOut,
+        });
+
+        itemsTimeline.staggerTo(
+          this.stackItems,
+          0.3,
+          {
+            autoAlpha: 1,
+            delay: level - currentLevel > 1 ? 0 : 0.3,
+          },
+          0.3,
+        );
+      } else if (direction === Direction.Down) {
+        if (currentLevel - level === 1) {
+          TweenLite.to(this.stackItems[level - 1], 0.3, {
+            autoAlpha: 0,
+            ease: Elastic.easeInOut,
+          });
+        } else {
+          const itemsTimeline = new TimelineLite({
+            ease: Elastic.easeInOut,
+          });
+
+          itemsTimeline.staggerTo(
+            Array.from(this.stackItems).reverse(),
+            0.3,
+            {
+              autoAlpha: 0,
+            },
+            0.3,
+          );
+        }
+      }
+
+      timeline.to(this.topElement, 0.3, {
+        y: this.elementSpacing * 3 - level * this.elementSpacing,
       });
-
-      timeline.to(this.topAnimationElement, 0.3, {
-        autoAlpha: 1,
-        y: 10,
-      });
-
-      timeline.set(this.topAnimationElement, {
-        autoAlpha: 0,
-      });
-
-      timeline.to(this.stackItems, 0.3, {
-        autoAlpha: 1,
-      });
-
-      timeline.to(
-        this.topElement,
-        0.3,
-        {
-          y: 0,
-        },
-        '-=0.3',
-      );
     }
   }
 }
