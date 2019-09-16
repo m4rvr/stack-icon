@@ -7,7 +7,7 @@ module.exports = {
     require('autoprefixer'),
     isProduction
       ? purgeCss({
-          content: ['./**/*.html'],
+          content: ['./src/*.html', './src/assets/css/*.css'],
         })
       : '',
   ],
