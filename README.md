@@ -2,6 +2,8 @@
 Type-safe dynamic stack icon animation written in TypeScript, styled with [tailwindcss](https://tailwindcss.com/) and animated with [GSAP](https://greensock.com/gsap/).
 Comes with a solid [webpack](https://webpack.js.org/) configuration for developing & building. Supported by ESLint & Prettier for consistent code style.
 
+![Stack Icon Animation](https://raw.githubusercontent.com/MarvinRudolph/stack-icon/master/screenshots/stack-icon.gif)
+
 ## Requirements
 * Node 10+
 * yarn/npm
